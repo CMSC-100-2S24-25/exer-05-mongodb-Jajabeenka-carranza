@@ -13,7 +13,7 @@ const saveStudent = async (req, res) => {
     try {
         const { stdnum, fname, lname, age } = req.body;
 
-        // Create a new student instance
+        //create new student instance
         const newStudent = new Student({
             stdnum,
             fname,
@@ -23,20 +23,39 @@ const saveStudent = async (req, res) => {
 
         const savedStudent = await newStudent.save();
 
-        // Return success response
+        //return success response
         res.send({ inserted: true, student: savedStudent });
     } catch (error) {
         console.error(error);
-        res.status(500).send({ inserted: false, error: "An error occurred while saving the student." });
     }
 };
+
+const updateStudent = async (req, res) => {
+    try {
+        const { fname } = req.body;
+
+        const result = await Student.updateOne(
+            { fname: fname }, //find the student by first name
+            { $set: { lname: "Parker" } } //automatically update the last name to "Parker"
+        );
+
+        if (result.modifiedCount > 0) {
+            res.send({ updated: true, message: "Last name set to Parker." });
+        } else {
+            res.send({ updated: false, message: "No student found with the given first name." });
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 
 const getUser = async (req, res) => {
     try {
         const user = await Student.find({ stdnum: req.query.stdnum });
         res.send(user);
     } catch (error) {
-        res.status(500).send({ error: "An error occurred while fetching the user." });
+        console.error(error);
     }
 };
 
@@ -45,8 +64,8 @@ const getMembers = async (req, res) => {
         const members = await Student.find({});
         res.send(members);
     } catch (error) {
-        res.status(500).send({ error: "An error occurred while fetching the members." });
+        console.error(error);
     }
 };
 
-export { saveStudent, getUser, getMembers };
+export { saveStudent, updateStudent, getUser, getMembers };
