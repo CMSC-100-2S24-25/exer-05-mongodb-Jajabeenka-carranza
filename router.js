@@ -1,8 +1,10 @@
-import { saveStudent, updateStudent, getUser, getMembers } from "./controller.js";
+import { saveStudent, updateStudent, removeUser, removeAllUsers, getUser, getMembers } from "./controller.js";
 
 const router = (app) => {
     app.post("/save-student", saveStudent);
-    app.post("/update", updateStudent); // Add the new route for updating a student
+    app.post("/update", updateStudent);
+    app.post("/remove-user", removeUser);
+    app.post("/remove-all-user", removeAllUsers);
     app.get("/user", getUser);
     app.get("/members", getMembers);
 };

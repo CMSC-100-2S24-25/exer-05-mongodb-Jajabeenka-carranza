@@ -49,6 +49,38 @@ const updateStudent = async (req, res) => {
     }
 };
 
+const removeUser = async (req, res) => {
+    try {
+        const { stdnum } = req.body;
+
+        //remove the student by their student number
+        const result = await Student.deleteOne({ stdnum: stdnum });
+
+        if (result.deletedCount > 0) {
+            res.send({ deleted: true, message: "Student deleted successfully." });
+        } else {
+            res.send({ deleted: false, message: "No student found with the given student number." });
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const removeAllUsers = async (req, res) => {
+    try {
+        //remove all students from the database
+        const result = await Student.deleteMany({});
+
+        if (result.deletedCount > 0) {
+            res.send({ deleted: true, message: "All students deleted successfully." });
+        } else {
+            res.send({ deleted: false, message: "No students found to delete." });
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 
 const getUser = async (req, res) => {
     try {
@@ -68,4 +100,4 @@ const getMembers = async (req, res) => {
     }
 };
 
-export { saveStudent, updateStudent, getUser, getMembers };
+export { saveStudent, updateStudent, removeUser, removeAllUsers, getUser, getMembers };
