@@ -1,26 +1,32 @@
 import mongoose from "mongoose";
 
-await mongoose.connect("mongodb://127.0.0.1:27017/ICS",{
+await mongoose.connect("mongodb://127.0.0.1:27017/StudentDatabase", {
     useNewUrlParser: true, useUnifiedTopology: true
 });
 
-const Student = mongoose.model("Student",{
-    stdnum : Number,
+const Student = mongoose.model("Student", {
+    stdnum: String,
     fname: String,
     lname: String,
     age: Number
 });
 
-const homepage = (req,res) => {
-    res.send("Welcome to the Homepage");
-}
+const getUser = async (req, res) => {
+    try {
+        const user = await Student.find({ stdnum: req.query.stdnum });
+        res.send(user);
+    } catch (error) {
+        res.status(500).send({ error: "An error occurred while fetching the user." });
+    }
+};
 
-const findStudents = async (req,res) => {
-    res.send(await Student.find({fname: req.query.fname}));
-}
+const getMembers = async (req, res) => {
+    try {
+        const members = await Student.find({});
+        res.send(members);
+    } catch (error) {
+        res.status(500).send({ error: "An error occurred while fetching the members." });
+    }
+};
 
-const findSubjectsPost = async (req,res) => {
-    res.send(await Student.find({age:req.body.age}));
-}
-
-export {homepage, findStudents, findSubjectsPost}
+export { getUser, getMembers };
